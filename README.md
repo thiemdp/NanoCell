@@ -11,6 +11,9 @@ This is a solution template for creating a Single Page App (SPA) with Blazor and
 * Entity Framework Core 3.1
 * Blazor
 * Elit Admin.
+## Pattern.
+* Domain-driven design (DDD)
+* Command Query Responsibility Segregation (CQRS)
 
 ## Getting Started
 
