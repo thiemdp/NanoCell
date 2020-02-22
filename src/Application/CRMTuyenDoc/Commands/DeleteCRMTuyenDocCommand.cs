@@ -36,13 +36,5 @@ namespace NanoCell.Application.CRMTuyenDoc.Commands
         }
 
     }
-    public class DeleteCRMTuyenDocCommandValidator : AbstractValidator<DeleteCRMTuyenDocCommand>
-    {
-        public DeleteCRMTuyenDocCommandValidator()
-        {
-            RuleFor(v => v.Code)
-                .MaximumLength(10)
-                .NotEmpty();
-        }
-    }
+   
 }
