@@ -4,15 +4,6 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>NanoCell.Domain</RootNamespace>
     <AssemblyName>NanoCell.Domain</AssemblyName>
-    
-    
-    
-    
-    
-    
-    
-    
-    
   </PropertyGroup>
 
   <ItemGroup>
