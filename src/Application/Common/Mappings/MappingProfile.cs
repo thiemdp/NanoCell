@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using NanoCell.Application.CRMTuyenDoc.Commands.CreateCRMTuyenDoc;
+using NanoCell.Application.CRMTuyenDoc.Commands;
 using NanoCell.Domain.Entities;
 using System;
 using System.Linq;
