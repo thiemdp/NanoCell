@@ -16,6 +16,9 @@ using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace NanoCell.Infrastructure
 {
@@ -30,9 +33,22 @@ namespace NanoCell.Infrastructure
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
-            services.AddDefaultIdentity<ApplicationUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 6;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "NanoCell.Cookie";
+                config.LoginPath = "/Identity/Account/Login";
+            });
             if (environment.IsEnvironment("Test"))
             {
                 services.AddIdentityServer()
@@ -60,17 +76,35 @@ namespace NanoCell.Infrastructure
                     });
             }
             else
-            {
-                services.AddIdentityServer()
-                    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>( );
+             {
+            //    services.AddIdentityServer( )
+            //        .AddApiAuthorization<ApplicationUser, ApplicationDbContext>( );
 
                 services.AddTransient<IDateTime, DateTimeService>();
                 services.AddTransient<IIdentityService, IdentityService>();
                 services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
             }
 
-            //services.AddAuthentication()
-            //    .AddIdentityServerJwt();
+            //services.AddAuthentication("OAuth")
+            //    .AddJwtBearer("OAuth", config =>
+            //    {
+            //        var sb = Encoding.UTF8.GetBytes("aaaaaaaaaaa");
+            //        var key = new SymmetricSecurityKey(sb);
+            //        config.Events = new JwtBearerEvents()
+            //        {
+            //            OnMessageReceived = context =>
+            //            {
+            //                if (context.Request.Query.ContainsKey("access_token"))
+            //                {
+
+            //                }
+            //            }
+            //        };
+            //        config.TokenValidationParameters = new TokenValidationParameters()
+            //        {
+            //            ValidateIssuer = 
+            //        }
+            //    });
 
             return services;
         }
