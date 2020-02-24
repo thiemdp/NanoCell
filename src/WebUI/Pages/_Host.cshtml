@@ -1,5 +1,6 @@
 ﻿@page "/"
 @namespace NanoCell.WebUI.Pages
+
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
@@ -12,15 +13,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebUI</title>
     <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="dist/css/style.min.css" rel="stylesheet">
+    @*<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />*@
+    @*<link href="css/site.css" rel="stylesheet" />*@
 </head>
-<body>
+<body class="skin-default fixed-layout">
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
 
-    <div id="blazor-error-ui">
+    @*<div id="blazor-error-ui">
         <environment include="Staging,Production">
             An error has occurred. This application may no longer respond until reloaded.
         </environment>
@@ -29,8 +32,21 @@
         </environment>
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
-    </div>
-
+    </div>*@
     <script src="_framework/blazor.server.js"></script>
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap popper Core JavaScript -->
+    <script src="assets/node_modules/popper/popper.min.js"></script>
+    <script src="assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="dist/js/perfect-scrollbar.jquery.min.js"></script>
+    <!--Wave Effects -->
+    <script src="dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="dist/js/custom.min.js"></script>
 </body>
 </html>

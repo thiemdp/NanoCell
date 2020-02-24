@@ -24,4 +24,11 @@
     <PackageReference Include="Shouldly" Version="3.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Application\NanoCell.Application.csproj" />
+    <ProjectReference Include="..\..\src\Domain\NanoCell.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\NanoCell.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\WebUI\NanoCell.WebUI.csproj" />
+  </ItemGroup>
+
 </Project>
