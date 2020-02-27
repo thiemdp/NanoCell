@@ -14,7 +14,7 @@ namespace NanoCell.Infrastructure.IntegrationTests.Persistence
 {
     public class ApplicationDbContextTests : IDisposable
     {
-        private readonly string _userId;
+        private readonly Guid _userId;
         private readonly DateTime _dateTime;
         private readonly Mock<IDateTime> _dateTimeMock;
         private readonly Mock<ICurrentUserService> _currentUserServiceMock;
@@ -26,7 +26,7 @@ namespace NanoCell.Infrastructure.IntegrationTests.Persistence
             _dateTimeMock = new Mock<IDateTime>();
             _dateTimeMock.Setup(m => m.Now).Returns(_dateTime);
 
-            _userId = "00000000-0000-0000-0000-000000000000";
+            _userId = Guid.Empty;
             _currentUserServiceMock = new Mock<ICurrentUserService>();
             _currentUserServiceMock.Setup(m => m.UserId).Returns(_userId);
 
@@ -43,12 +43,7 @@ namespace NanoCell.Infrastructure.IntegrationTests.Persistence
 
             _sut = new ApplicationDbContext(options, operationalStoreOptions, _currentUserServiceMock.Object, _dateTimeMock.Object);
 
-            _sut.TodoItems.Add(new TodoItem
-            {
-                Id = 1,
-                Title = "Do this thing."
-            });
-
+         
             _sut.SaveChanges();
         }
 

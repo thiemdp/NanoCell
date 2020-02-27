@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
 
 namespace NanoCell.Application.Common.Behaviours
 {
@@ -23,10 +24,10 @@ namespace NanoCell.Application.Common.Behaviours
         public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
             var requestName = typeof(TRequest).Name;
-            var userId = _currentUserService.UserId ?? string.Empty;
+            var userId = _currentUserService.UserId ;
             string userName = string.Empty;
 
-            if (!string.IsNullOrEmpty(userId))
+            if (!string.IsNullOrEmpty(userId)  )
             {
                 userName = await _identityService.GetUserNameAsync(userId);
             }

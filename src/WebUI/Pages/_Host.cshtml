@@ -12,10 +12,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebUI</title>
     <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
+
+    @*<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />*@
+    <!-- Custom CSS -->
+    <link href="./dist/css/style.css" rel="stylesheet">
+    <!-- Dashboard 1 Page CSS -->
+    <link href="./dist/css/pages/dashboard1.css" rel="stylesheet">
+    <link href="./dist/css/site.css" rel="stylesheet" />
+    <link href="_content/Blazored.Toast/blazored-toast.css" rel="stylesheet" />
+    <link href="dist/css/pages/icon-page.css" rel="stylesheet">
+
 </head>
 <body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Elite admin</p>
+        </div>
+    </div>
+
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
@@ -32,5 +50,40 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="./dist/js/jquery/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap popper Core JavaScript -->
+    <script src="./dist/js/popper/popper.min.js"></script>
+    <script src="./dist/js/bootstrap/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="./dist/js/perfect-scrollbar.jquery.min.js"></script>
+    <!--Wave Effects -->
+    <script src="./dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="./dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="./dist/js/custom.js"></script>
+
+    <script type="text/javascript">
+        new MutationObserver((mutations, observer) => {
+            if (document.querySelector('#components-reconnect-modal h5 a')) {
+                // Now every 10 seconds, see if the server appears to be back, and if so, reload
+                async function attemptReload() {
+                    await fetch(''); // Check the server really is back
+                    location.reload();
+                }
+                observer.disconnect();
+                attemptReload();
+                setInterval(attemptReload, 10000);
+            }
+        }).observe(document.body, { childList: true, subtree: true });
+
+        $(function () {
+            $(".preloader").fadeOut();
+        });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+       
+    </script>
 </body>
 </html>

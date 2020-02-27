@@ -1,0 +1,66 @@
+﻿@page "/crmtuyendoc"
+@using NanoCell.Application.CRMTuyenDoc.Commands;
+@using NanoCell.Application.CRMTuyenDoc.Queries;
+@using MediatR;
+@inject IMediator mediatR;
+<AuthorizeView>
+    <Authorized>
+        <h3>CRMTuyenDoc</h3>
+        @if (listTuyenDoc == null)
+        {
+            <div>Loading...</div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listTuyenDoc)
+                    {
+                        <tr>
+                            <td>@item.Code</td>
+                            <td>@item.Name</td>
+                           
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        <form>
+            <input type="text" @bind="@crmTuyenDocCreat.Code" placeholder="Code" />
+            <input type="text" @bind="@crmTuyenDocCreat.Name" placeholder="Name" />
+            <button type="button" @onclick="Luu">Luu</button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <p>401-unauthorize.</p>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
+
+@code {
+    private List<CRMTuyenDocOutputDto> listTuyenDoc = new List<CRMTuyenDocOutputDto>();
+    private CreateCRMTuyenDocCommand crmTuyenDocCreat;
+    protected override async Task OnInitializedAsync()
+    {
+        crmTuyenDocCreat = new CreateCRMTuyenDocCommand();
+        listTuyenDoc = await mediatR.Send<List<CRMTuyenDocOutputDto>>(new GetAllCRMTuyenDocQuery());
+    }
+
+    private async Task Luu()
+    {
+        if(!string.IsNullOrEmpty( crmTuyenDocCreat.Code))
+        {
+            await mediatR.Send(crmTuyenDocCreat);
+            listTuyenDoc = await mediatR.Send<List<CRMTuyenDocOutputDto>>(new GetAllCRMTuyenDocQuery());
+            crmTuyenDocCreat = new CreateCRMTuyenDocCommand();
+        }
+    }
+}

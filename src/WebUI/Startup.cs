@@ -19,6 +19,7 @@ using NanoCell.Application;
 using NanoCell.Infrastructure;
 using NanoCell.Application.Common.Interfaces;
 using NanoCell.WebUI.Services;
+using Blazored.Toast;
 
 namespace NanoCell.WebUI
 {
@@ -49,6 +50,7 @@ namespace NanoCell.WebUI
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddBlazoredToast();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

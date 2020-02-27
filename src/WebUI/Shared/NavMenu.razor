@@ -1,37 +1,57 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">WebUI</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+﻿<aside class="left-sidebar">
+    <!-- Sidebar scroll-->
+    <div class="scroll-sidebar">
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav">
+            <ul id="sidebarnav">
+                <li>
+                    <NavLink class="waves-effect waves-dark" href="/">
+                        <i class="mdi mdi-chart-bar"></i><span class="hide-menu">Dashboard <span class="badge badge-pill badge-cyan ml-auto">4</span></span>
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink class="has-arrow waves-effect waves-dark" aria-expanded="false">
+                        <i class="mdi mdi-book"></i><span class="hide-menu"> Admin manager</span>
+                        @*<a class="has-arrow waves-effect waves-dark" aria-expanded="false"><i class="mdi mdi-book"></i><span class="hide-menu"> Admin manager</span></a>*@
+                    </NavLink>
+                        <ul aria-expanded="false" class="collapse">
+                            <li>
+                                <NavLink class="waves-effect waves-dark" href="role">
+                                    <i class="mdi mdi-bookmark-check"></i><span>Roles</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class=" waves-effect waves-dark" href="org">
+                                    <i class="mdi mdi-account-box"></i> Orgmanager
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class=" waves-effect waves-dark" href="user">
+                                    <i class="mdi mdi-account-multiple"></i> Users
+                                </NavLink>
+                            </li>
+                        </ul>
+                </li>
+                <li>
+                    <NavLink class=" waves-effect waves-dark" href="logging">
+                        <i class="mdi mdi-account-multiple"></i> <span class="hide-menu">Logging</span> 
+                    </NavLink>
+                </li>
+             
+            </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
+    </div>
+    <!-- End Sidebar scroll-->
+</aside>
 
 @code {
-    private bool collapseNavMenu = true;
+    //private bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    //private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+    //private void ToggleNavMenu()
+    //{
+    //    collapseNavMenu = !collapseNavMenu;
+    //}
 }

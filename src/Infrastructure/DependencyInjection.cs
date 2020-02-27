@@ -1,6 +1,6 @@
 ﻿using NanoCell.Application;
 using NanoCell.Application.Common.Interfaces;
-using NanoCell.Infrastructure.Files;
+//using NanoCell.Infrastructure.Files;
 using NanoCell.Infrastructure.Identity;
 using NanoCell.Infrastructure.Persistence;
 using NanoCell.Infrastructure.Services;
@@ -82,7 +82,7 @@ namespace NanoCell.Infrastructure
 
                 services.AddTransient<IDateTime, DateTimeService>();
                 services.AddTransient<IIdentityService, IdentityService>();
-                services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+              //  services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
             }
 
             //services.AddAuthentication("OAuth")
