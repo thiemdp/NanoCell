@@ -1,4 +1,6 @@
-﻿namespace NanoCell.Application.Common.Interfaces
+﻿using System;
+
+namespace NanoCell.Application.Common.Interfaces
 {
     public interface ICurrentUserService
     {

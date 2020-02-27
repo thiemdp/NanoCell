@@ -1,4 +1,4 @@
-$(function () {
+var NanocellInitMainLayout= function () {
     "use strict";
     $(function () {
         $(".preloader").fadeOut();
@@ -12,6 +12,7 @@ $(function () {
     var set = function () {
         var width = (window.innerWidth > 0) ? window.innerWidth : this.screen.width;
         var topOffset = 55;
+   
         if (width < 1170) { 
             $("body").addClass("mini-sidebar");
             $('.navbar-brand span').hide();
@@ -27,6 +28,7 @@ $(function () {
         if (height > topOffset) {
             $(".page-wrapper").css("min-height", (height) + "px");
         }
+       
     };
     $(window).ready(set);
     $(window).on("resize", set);
@@ -34,6 +36,7 @@ $(function () {
     // Theme options
     // ==============================================================
     $(".sidebartoggler").on('click', function () {
+        console.log('chay');
         if ($("body").hasClass("mini-sidebar")) {
             $("body").trigger("resize");
             $("body").removeClass("mini-sidebar");
@@ -199,4 +202,4 @@ $(function () {
         //replace the "Choose a file" label
         $(this).next('.custom-file-label').html(fileName);
     })
-});
+};

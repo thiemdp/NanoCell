@@ -19,6 +19,7 @@ using NanoCell.Application;
 using NanoCell.Infrastructure;
 using NanoCell.Application.Common.Interfaces;
 using NanoCell.WebUI.Services;
+using Blazored.Toast;
 
 namespace NanoCell.WebUI
 {
@@ -44,27 +45,12 @@ namespace NanoCell.WebUI
 
             services.AddApplication();
             services.AddInfrastructure(Configuration, Environment);
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddHttpContextAccessor();
-
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            //services.AddSingleton<WeatherForecastService>();
-
-            //services.AddOpenApiDocument(configure =>
-            //{
-            //    configure.Title = "CASN API";
-            //    configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
-            //    {
-            //        Type = OpenApiSecuritySchemeType.ApiKey,
-            //        Name = "Authorization",
-            //        In = OpenApiSecurityApiKeyLocation.Header,
-            //        Description = "Type into the textbox: Bearer {your JWT token}."
-            //    });
-
-            //    configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
-            //});
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddBlazoredToast();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

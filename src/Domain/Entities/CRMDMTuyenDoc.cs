@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using NanoCell.Domain.Common.Auditing;
 
 namespace NanoCell.Domain.Entities
 {
   [Table("CRMTuyenDocs")]
-  public  class CRMDMTuyenDoc: AuditableEntity
-    {
-        public long Id { get; set; }
-
+  public  class CRMDMTuyenDoc: AuditedEntity
+    { 
         [MaxLength(100)]
         [Required]
         public string Name { get; set; }

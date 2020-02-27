@@ -1,14 +1,14 @@
-﻿using NanoCell.Application.TodoLists.Queries.ExportTodos;
-using CsvHelper.Configuration;
+﻿//using NanoCell.Application.TodoLists.Queries.ExportTodos;
+//using CsvHelper.Configuration;
 
-namespace NanoCell.Infrastructure.Files.Maps
-{
-    public class TodoItemRecordMap : ClassMap<TodoItemRecord>
-    {
-        public TodoItemRecordMap()
-        {
-            AutoMap();
-            Map(m => m.Done).ConvertUsing(c => c.Done ? "Yes" : "No");
-        }
-    }
-}
+//namespace NanoCell.Infrastructure.Files.Maps
+//{
+//    public class TodoItemRecordMap : ClassMap<TodoItemRecord>
+//    {
+//        public TodoItemRecordMap()
+//        {
+//            AutoMap();
+//            Map(m => m.Done).ConvertUsing(c => c.Done ? "Yes" : "No");
+//        }
+//    }
+//}

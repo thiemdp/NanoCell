@@ -1,5 +1,5 @@
 ﻿using NanoCell.Application.Common.Interfaces;
-using NanoCell.Domain.Common;
+using NanoCell.Domain.Common.Auditing;
 using NanoCell.Domain.Entities;
 using NanoCell.Infrastructure.Identity;
 using IdentityServer4.EntityFramework.Options;
@@ -28,29 +28,39 @@ namespace NanoCell.Infrastructure.Persistence
             
         }
 
-        public DbSet<TodoList> TodoLists { get; set; }
-
-        public DbSet<TodoItem> TodoItems { get; set; }
 
         public DbSet<CRMDMTuyenDoc> CRMDMTuyenDocs { get; set; }
       
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            foreach (var entry in ChangeTracker.Entries<CreationAuditedEntity>())
             {
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = _currentUserService.UserId;
-                        entry.Entity.Created = _dateTime.Now;
+                        entry.Entity.CreatorUserId = _currentUserService.UserId;
+                        entry.Entity.CreationTime = _dateTime.Now;
                         break;
+                    //case EntityState.Modified:
+                    //    entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                    //    entry.Entity.LastModified = _dateTime.Now;
+                    //    break;
+                }
+            }
+            foreach (var entry in ChangeTracker.Entries<AuditedEntity>())
+            {
+                switch (entry.State)
+                {
+                    //case EntityState.Added:
+                    //    entry.Entity.CreatorUserId = _currentUserService.UserId;
+                    //    entry.Entity.CreationTime = _dateTime.Now;
+                    //    break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = _currentUserService.UserId;
-                        entry.Entity.LastModified = _dateTime.Now;
+                        entry.Entity.LastModifierUserId = _currentUserService.UserId;
+                        entry.Entity.LastModificationTime = _dateTime.Now;
                         break;
                 }
             }
-
             return base.SaveChangesAsync(cancellationToken);
         }
 

@@ -15,7 +15,7 @@ namespace NanoCell.Application.Common.Behaviours
         private readonly IIdentityService _identityService;
 
         public RequestPerformanceBehaviour(
-            ILogger<TRequest> logger, 
+            ILogger<TRequest> logger,
             ICurrentUserService currentUserService,
             IIdentityService identityService)
         {
@@ -36,15 +36,21 @@ namespace NanoCell.Application.Common.Behaviours
 
             var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
-            //if (elapsedMilliseconds > 500)
-            //{
+            if (elapsedMilliseconds > 500)
+            {
                 var requestName = typeof(TRequest).Name;
                 var userId = _currentUserService.UserId;
-                var userName = await _identityService.GetUserNameAsync(userId);
+
+                var userName = string.Empty;
+                if (userId != null)
+                {
+                    userName = await _identityService.GetUserNameAsync(userId);
+                }
+
 
                 _logger.LogWarning("NanoCell Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
                     requestName, elapsedMilliseconds, userId, userName, request);
-            //}
+            }
 
             return response;
         }

@@ -7,9 +7,6 @@ namespace NanoCell.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        DbSet<TodoList> TodoLists { get; set; }
-
-        DbSet<TodoItem> TodoItems { get; set; }
 
         DbSet<CRMDMTuyenDoc> CRMDMTuyenDocs { get; set; }
 
