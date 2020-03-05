@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity.UI.Services;
+ 
 
 namespace NanoCell.Infrastructure
 {
@@ -40,10 +42,12 @@ namespace NanoCell.Infrastructure
                 o.Password.RequireUppercase = false;
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequiredLength = 6;
+
+                o.SignIn.RequireConfirmedEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+           
             services.ConfigureApplicationCookie(config =>
             {
                 config.Cookie.Name = "NanoCell.Cookie";
@@ -66,11 +70,11 @@ namespace NanoCell.Infrastructure
                         new TestUser
                         {
                             SubjectId = "f26da293-02fb-4c90-be75-e4aa51e0bb17",
-                            Username = "jason@clean-architecture",
+                            Username = "nanocell@nanocell.com",
                             Password = "NanoCell!",
                             Claims = new List<Claim>
                             {
-                                new Claim(JwtClaimTypes.Email, "jason@clean-architecture")
+                                new Claim(JwtClaimTypes.Email, "nanocell@nanocell.com")
                             }
                         }
                     });
@@ -82,7 +86,9 @@ namespace NanoCell.Infrastructure
 
                 services.AddTransient<IDateTime, DateTimeService>();
                 services.AddTransient<IIdentityService, IdentityService>();
-              //  services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+                //  services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+                services.AddSingleton<IEmailConfiguration>(configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+                services.AddTransient<IEmailService, EmailService>();
             }
 
             //services.AddAuthentication("OAuth")

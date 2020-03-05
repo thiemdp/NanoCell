@@ -10,6 +10,8 @@ using NanoCell.Domain.Entities;
 using AutoMapper.Configuration.Annotations;
 using FluentValidation;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using NanoCell.Application.Common.Exceptions;
 
 namespace NanoCell.Application.CRMTuyenDoc.Commands
 {
@@ -32,10 +34,23 @@ namespace NanoCell.Application.CRMTuyenDoc.Commands
 
             public async Task<Unit> Handle(UpdateCRMTuyenDocCommand request, CancellationToken cancellationToken)
             {
-                var tuyendoc = _mapper.Map<CRMDMTuyenDoc>(request);
-                _applicationDbContext.CRMDMTuyenDocs.Update(tuyendoc);
-                await _applicationDbContext.SaveChangesAsync(cancellationToken);
-                return Unit.Value;
+                try
+                {
+                    var td =   _applicationDbContext.CRMDMTuyenDocs.Where(x => x.Id == request.Id).FirstOrDefault();
+                    if(td== null)
+                    {
+                        throw new NotFoundException(nameof(CRMDMTuyenDoc), request.Id);
+                    }
+                    td.Name = request.Name;
+                    td.Code = request.Code;
+                    await _applicationDbContext.SaveChangesAsync(cancellationToken);
+                    return Unit.Value;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+             
             }
         }
 

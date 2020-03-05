@@ -2,65 +2,134 @@
 @using NanoCell.Application.CRMTuyenDoc.Commands;
 @using NanoCell.Application.CRMTuyenDoc.Queries;
 @using MediatR;
+@using Syncfusion.EJ2.Blazor.Grids;
+@using Syncfusion.EJ2.Blazor.Buttons;
+@using Syncfusion.EJ2.Blazor.Popups;
+@using Syncfusion.EJ2.Blazor.Navigations;
+
+@inject IToastService toastService;
+
 @inject IMediator mediatR;
-<AuthorizeView>
-    <Authorized>
-        <h3>CRMTuyenDoc</h3>
-        @if (listTuyenDoc == null)
-        {
-            <div>Loading...</div>
-        }
-        else
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in listTuyenDoc)
-                    {
-                        <tr>
-                            <td>@item.Code</td>
-                            <td>@item.Name</td>
-                           
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        <form>
-            <input type="text" @bind="@crmTuyenDocCreat.Code" placeholder="Code" />
-            <input type="text" @bind="@crmTuyenDocCreat.Name" placeholder="Name" />
-            <button type="button" @onclick="Luu">Luu</button>
-        </form>
-    </Authorized>
-    <NotAuthorized>
-        <p>401-unauthorize.</p>
-    </NotAuthorized>
 
-</AuthorizeView>
-
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">Danh sách tuyến đọc</h4>
+    </div>
+    <div class="col-md-7 align-self-center text-right">
+        <div class="d-flex justify-content-end align-items-center ">
+            @*<button type="button" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Create New</button>*@
+            <EjsButton @onclick="AddNewRecord" CssClass="e-info">Create New</EjsButton>
+        </div>
+    </div>
+</div>
+<div class="row ">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body shadow">
+                <EjsGrid @ref="@Grid" DataSource="@ListTuyenDoc" Height="100%" AllowPaging="true" AllowFiltering="true" AllowSorting="true" ShowColumnMenu="true" ColumnMenuItems="@columnMenu" Toolbar="@ToolbarIT">
+                    <GridFilterSettings Type="Syncfusion.EJ2.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                    <GridPageSettings PageSize="20"></GridPageSettings>
+                    <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Dialog" Dialog="DialogParams" ShowDeleteConfirmDialog="true"></GridEditSettings>
+                    <GridEvents OnActionBegin="ActionBeginHandler" TValue="CRMTuyenDocOutputDto"></GridEvents>
+                    <GridColumns>
+                        <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Id)" IsPrimaryKey="true" Visible="false" HeaderText="#" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left" Width="100" AllowEditing="false"></GridColumn>
+                        <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Name)" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Code)" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(CRMTuyenDocOutputDto.CreationTime)" AllowEditing="false" HeaderText="Created date" EditType="EditType.DatePickerEdit" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Right" Format="dd/MM/yyyy"></GridColumn>
+                        <GridColumn>
+                            <GridCommandColumns>
+                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@( new CommandButtonOptions() { CssClass="e-info e-round e-small" ,IconCss= "e-icons e-edit" })"></GridCommandColumn>
+                                <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@( new CommandButtonOptions() { CssClass="e-warning e-round e-small" ,IconCss= "e-icons e-delete" })"></GridCommandColumn>
+                                <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@( new CommandButtonOptions() { CssClass="e-success e-round e-small" ,IconCss= "e-icons e-update" })"></GridCommandColumn>
+                                <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@( new CommandButtonOptions() { CssClass="e-error e-round e-small" ,IconCss= "e-icons e-cancel-icon" })"></GridCommandColumn>
+                            </GridCommandColumns>
+                        </GridColumn>
+                    </GridColumns>
+                </EjsGrid>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @code {
-    private List<CRMTuyenDocOutputDto> listTuyenDoc = new List<CRMTuyenDocOutputDto>();
-    private CreateCRMTuyenDocCommand crmTuyenDocCreat;
-    protected override async Task OnInitializedAsync()
-    {
-        crmTuyenDocCreat = new CreateCRMTuyenDocCommand();
-        listTuyenDoc = await mediatR.Send<List<CRMTuyenDocOutputDto>>(new GetAllCRMTuyenDocQuery());
-    }
+    //  public string[] Toolbar = new string[] {"Refresh", "Search" };
+   public List<ItemModel> ToolbarIT = new List<ItemModel>();
+    //Toolbaritems.Add(new Syncfusion.EJ2.Blazor.Navigations.ItemModel() { Text = "Refresh", Id = "refresh", TooltipText = "refresh", PrefixIcon = "MT_reload" });
+    //Toolbaritems.Add(new Syncfusion.EJ2.Blazor.Navigations.ItemModel() { Text = "Delete", Id = "delete", TooltipText = "Delete Record", PrefixIcon = "delete" });
 
-    private async Task Luu()
+    public string[] columnMenu = new string[] { "ColumnChooser", "Filter" };
+    EjsGrid<CRMTuyenDocOutputDto> Grid;
+    public List<CRMTuyenDocOutputDto> ListTuyenDoc { get; set; }
+    public static string Header { get; set; }
+    public object DialogParams = new
     {
-        if(!string.IsNullOrEmpty( crmTuyenDocCreat.Code))
+@@params = new DialogModel { Header = Header }
+};
+
+protected override async Task OnInitializedAsync()
+{
+    ListTuyenDoc = await mediatR.Send<List<CRMTuyenDocOutputDto>>(new GetAllCRMTuyenDocQuery());
+}
+
+public void AddNewRecord()
+{
+    Header = "Thêm mới tuyến đọc";
+    this.Grid.AddRecord();
+}
+
+public async Task ActionBeginHandler(ActionEventArgs<CRMTuyenDocOutputDto> args)
+{
+    try
+    {
+        switch (args.RequestType)
         {
-            await mediatR.Send(crmTuyenDocCreat);
-            listTuyenDoc = await mediatR.Send<List<CRMTuyenDocOutputDto>>(new GetAllCRMTuyenDocQuery());
-            crmTuyenDocCreat = new CreateCRMTuyenDocCommand();
+            case Syncfusion.EJ2.Blazor.Grids.Action.BeginEdit:
+                Header = "Sửa tuyến đọc " + args.RowData.Id.ToString();
+                break;
+            case Syncfusion.EJ2.Blazor.Grids.Action.Save:
+                if (args.Data.Id > 0)
+                {
+                    UpdateCRMTuyenDocCommand td = new UpdateCRMTuyenDocCommand();
+                    td.Id = args.Data.Id;
+                    td.Name = args.Data.Name;
+                    td.Code = args.Data.Code;
+                    await mediatR.Send(td);
+                }
+                else
+                {
+                    CreateCRMTuyenDocCommand td = new CreateCRMTuyenDocCommand();
+                    td.Name = args.Data.Name;
+                    td.Code = args.Data.Code;
+                    long id = await mediatR.Send<long>(td);
+                    args.Data.Id = id;
+                }
+                toastService.ShowSuccess("Cập nhật thành công", "Congratulations!");
+                break;
+            case Syncfusion.EJ2.Blazor.Grids.Action.Delete:
+                DeleteCRMTuyenDocCommand tddl = new DeleteCRMTuyenDocCommand();
+                tddl.Id = args.Data.Id;
+                Unit a = await mediatR.Send<Unit>(tddl);
+                toastService.ShowSuccess("Xóa thành công!", "Congratulations!");
+                break;
+            case Syncfusion.EJ2.Blazor.Grids.Action.Cancel:
+                break;
+            case Syncfusion.EJ2.Blazor.Grids.Action.Add:
+                Header = "Thêm mới tuyến đọc";
+                break;
+            default:
+                break;
         }
     }
+    catch (Exception ex)
+    {
+        args.Cancel = true;
+        toastService.ShowError(ex.Message, "Error!");
+
+    }
+    // Here you can customize your code
+
+
+}
+
 }

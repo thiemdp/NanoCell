@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using NanoCell.Infrastructure.Identity;
+using NanoCell.Application.Common.Interfaces;
+using NanoCell.Application.Common.Models;
 
 namespace NanoCell.WebUI.Areas.Identity.Pages.Account
 {
@@ -18,9 +20,9 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailService emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -57,10 +59,18 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                //await _emailSender.SendEmailAsync(
+                //    Input.Email,
+                //    "Reset Password",
+                //    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                EmailMessageDto emailMessage = new EmailMessageDto();
+                emailMessage.ToAddresses = new List<EmailAddressDto>();
+                emailMessage.ToAddresses.Add(new EmailAddressDto("", Input.Email));
+                emailMessage.Subject = "Reset Password";
+                emailMessage.Body = $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+                emailMessage.IsHtml = true;
+                await _emailSender.SendEmailAsync(emailMessage);
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using NanoCell.Application.Common.Interfaces;
+using NanoCell.Application.Common.Models;
 using NanoCell.Infrastructure.Identity;
 
 namespace NanoCell.WebUI.Areas.Identity.Pages.Account
@@ -22,14 +24,14 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailService emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -147,8 +149,16 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                        EmailMessageDto emailMessage = new EmailMessageDto();
+                        emailMessage.ToAddresses = new List<EmailAddressDto>();
+                        emailMessage.ToAddresses.Add(new EmailAddressDto("", Input.Email));
+                        emailMessage.Subject = "Confirm your email";
+                        emailMessage.Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+                        emailMessage.IsHtml = true;
+                        await _emailSender.SendEmailAsync(emailMessage);
 
                         return LocalRedirect(returnUrl);
                     }

@@ -22,8 +22,13 @@ var NanocellInitMainLayout= function () {
             $("body").removeClass("mini-sidebar");
             $('.navbar-brand span').show();
         }
-         var height = ((window.innerHeight > 0) ? window.innerHeight : this.screen.height) - 1;
-        height = height - topOffset;
+       
+        var height = ((window.innerHeight > 0) ? window.innerHeight : this.screen.height) - 1;
+        //console.log(height);
+        //console.log(window.innerHeight );
+        //console.log(this.screen);
+
+       // height = height - topOffset;
         if (height < 1) height = 1;
         if (height > topOffset) {
             $(".page-wrapper").css("min-height", (height) + "px");

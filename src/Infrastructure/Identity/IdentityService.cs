@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using NanoCell.Application.Common.User;
 
 namespace NanoCell.Infrastructure.Identity
 {
@@ -17,6 +19,11 @@ namespace NanoCell.Infrastructure.Identity
             _userManager = userManager;
         }
 
+        public async Task<List<ApplicationUserOutputDto>> GetAllUserAsync()
+        {
+           // var list = await _userManager.Users.ToListAsync();
+            return await _userManager.Users.Select(x=> new ApplicationUserOutputDto() { Email = x.Email,Id = x.Id,UserName = x.UserName }).ToListAsync();
+        }
         public async Task<string> GetUserNameAsync(string userId)
         {
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);

@@ -10,6 +10,8 @@ using NanoCell.Domain.Entities;
 using AutoMapper.Configuration.Annotations;
 using FluentValidation;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using NanoCell.Application.Common.Exceptions;
 
 namespace NanoCell.Application.CRMTuyenDoc.Commands
 {
@@ -28,7 +30,11 @@ namespace NanoCell.Application.CRMTuyenDoc.Commands
 
             public async Task<Unit> Handle(DeleteCRMTuyenDocCommand request, CancellationToken cancellationToken)
             {
-                var td = await _applicationDbContext.CRMDMTuyenDocs.FindAsync(request.Id);
+                var td =   _applicationDbContext.CRMDMTuyenDocs.Where(x=>x.Id == request.Id).FirstOrDefault();
+                if (td == null)
+                {
+                    throw new NotFoundException(nameof(CRMDMTuyenDoc), request.Id);
+                }
                 _applicationDbContext.CRMDMTuyenDocs.Remove(td);
                 await _applicationDbContext.SaveChangesAsync(cancellationToken);
                 return Unit.Value;

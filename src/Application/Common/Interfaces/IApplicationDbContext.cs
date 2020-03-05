@@ -11,5 +11,8 @@ namespace NanoCell.Application.Common.Interfaces
         DbSet<CRMDMTuyenDoc> CRMDMTuyenDocs { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
+        Task SetModified<TEntity>(TEntity entity);
+        
     }
 }

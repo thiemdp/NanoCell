@@ -36,8 +36,8 @@ namespace NanoCell.Application.Common.Behaviours
 
             var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
-            if (elapsedMilliseconds > 500)
-            {
+            //if (elapsedMilliseconds > 500)
+            //{
                 var requestName = typeof(TRequest).Name;
                 var userId = _currentUserService.UserId;
 
@@ -50,7 +50,7 @@ namespace NanoCell.Application.Common.Behaviours
 
                 _logger.LogWarning("NanoCell Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
                     requestName, elapsedMilliseconds, userId, userName, request);
-            }
+            //}
 
             return response;
         }

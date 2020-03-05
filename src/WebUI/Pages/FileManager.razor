@@ -1,0 +1,34 @@
+﻿@page "/filemanager"
+@using  NanoCell.Application;
+@inject IIdentityService userManager;
+
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">File Manager</h4>
+    </div>
+    <div class="col-md-7 align-self-center text-right">
+        @*<div class="d-flex justify-content-end align-items-center">
+            <button type="button" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Create New</button>
+        </div>*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <EjsFileManager Height="500">
+                    <FileManagerAjaxSettings Url="/api/FileManager/FileOperations"
+                                             UploadUrl="/api/FileManager/Upload"
+                                             DownloadUrl="/api/FileManager/Download"
+                                             GetImageUrl="/api/FileManager/GetImage">
+                    </FileManagerAjaxSettings>
+                </EjsFileManager>
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    
+
+
+}

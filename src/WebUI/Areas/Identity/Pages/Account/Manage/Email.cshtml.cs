@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using NanoCell.Infrastructure.Identity;
+using NanoCell.Application.Common.Interfaces;
+using NanoCell.Application.Common.Models;
 
 namespace NanoCell.WebUI.Areas.Identity.Pages.Account.Manage
 {
@@ -18,12 +20,12 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
 
         public EmailModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailService emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -99,10 +101,18 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account.Manage
                     pageHandler: null,
                     values: new { userId = userId, email = Input.NewEmail, code = code },
                     protocol: Request.Scheme);
-                await _emailSender.SendEmailAsync(
-                    Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                //await _emailSender.SendEmailAsync(
+                //    Input.NewEmail,
+                //    "Confirm your email",
+                //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                EmailMessageDto emailMessage = new EmailMessageDto();
+                emailMessage.ToAddresses = new List<EmailAddressDto>();
+                emailMessage.ToAddresses.Add(new EmailAddressDto("", Input.NewEmail));
+                emailMessage.Subject = "Confirm your email";
+                emailMessage.Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+                emailMessage.IsHtml = true;
+                await _emailSender.SendEmailAsync(emailMessage);
 
                 StatusMessage = "Confirmation link to change email sent. Please check your email.";
                 return RedirectToPage();
@@ -135,10 +145,17 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account.Manage
                 pageHandler: null,
                 values: new { area = "Identity", userId = userId, code = code },
                 protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            //await _emailSender.SendEmailAsync(
+            //    email,
+            //    "Confirm your email",
+            //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            EmailMessageDto emailMessage = new EmailMessageDto();
+            emailMessage.ToAddresses = new List<EmailAddressDto>();
+            emailMessage.ToAddresses.Add(new EmailAddressDto("", email));
+            emailMessage.Subject = "Confirm your email";
+            emailMessage.Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+            emailMessage.IsHtml = true;
+            await _emailSender.SendEmailAsync(emailMessage);
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();

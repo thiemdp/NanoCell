@@ -1,5 +1,49 @@
 ﻿@page "/user"
+@using Syncfusion.EJ2.Blazor.Grids;
+@using NanoCell.Infrastructure.Identity;
+@using NanoCell.Application.Common.User;
+@using  NanoCell.Application;
+@inject IIdentityService userManager;
 
-<h1>User page</h1>
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">Users</h4>
+    </div>
+    <div class="col-md-7 align-self-center text-right">
+        <div class="d-flex justify-content-end align-items-center">
+            <button type="button" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Create New</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <Syncfusion.EJ2.Blazor.Buttons.EjsButton OnClick="GetData" IsPrimary="true" CssClass="e-primary">GetData</Syncfusion.EJ2.Blazor.Buttons.EjsButton>
+                <EjsGrid DataSource="@ListUser" AllowMultiSorting="true" AllowPaging="true" Toolbar="@(new List<string>(){"Add","Edit","Delete","Update","Cancel",})">
+                <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" ></GridEditSettings>
+                    <GridPageSettings PageSize="20"></GridPageSettings>
+                    <GridColumns>
+                        <GridColumn Field="@nameof(ApplicationUserOutputDto.UserName)" HeaderText="UserName" TextAlign=Syncfusion.EJ2.Blazor.Grids.TextAlign.Left></GridColumn>
+                        <GridColumn Field="@nameof(ApplicationUserOutputDto.Email)" HeaderText="Email" TextAlign=Syncfusion.EJ2.Blazor.Grids.TextAlign.Left></GridColumn>
+                    </GridColumns>
+                   
+                </EjsGrid>
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    public List<ApplicationUserOutputDto> ListUser { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        ListUser = await userManager.GetAllUserAsync();
+    }
+    private async Task GetData()
+    {
+        ListUser = await userManager.GetAllUserAsync();
+        StateHasChanged();
+    }
 
-Welcome to your new app.
+
+}

@@ -26,8 +26,8 @@ namespace NanoCell.Application.CRMTuyenDoc.Queries
 
             public async Task<List<CRMTuyenDocOutputDto>> Handle(GetAllCRMTuyenDocQuery request, CancellationToken cancellationToken)
             {
-                var list = await _applicationDbContext.CRMDMTuyenDocs.ToListAsync();
-                return _mapper.Map<List<CRMTuyenDocOutputDto>>(list);
+                var list = await _applicationDbContext.CRMDMTuyenDocs.AsNoTracking().ToListAsync();
+                return _mapper.Map<List<CRMTuyenDocOutputDto>>(list).OrderBy(x=>x.Code).ToList();
             }
         }
     }
