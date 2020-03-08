@@ -9,9 +9,8 @@ namespace NanoCell.Infrastructure.Persistence
     {
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
         {
-            var defaultUser = new ApplicationUser { UserName = "jason@clean-architecture", Email = "jason@clean-architecture" };
-
-            if (userManager.Users.All(u => u.Id != defaultUser.Id))
+            var defaultUser = new ApplicationUser { UserName = "admin@admin.com",Surname="admin", Email = "jason@clean-architecture",EmailConfirmed=true };
+            if (userManager.Users.All(u => u.Email != defaultUser.Email))
             {
                 await userManager.CreateAsync(defaultUser, "NanoCell!");
             }

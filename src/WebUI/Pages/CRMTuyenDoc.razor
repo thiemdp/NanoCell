@@ -30,9 +30,9 @@
                     <GridFilterSettings Type="Syncfusion.EJ2.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
                     <GridPageSettings PageSize="20"></GridPageSettings>
                     <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Dialog" Dialog="DialogParams" ShowDeleteConfirmDialog="true"></GridEditSettings>
-                    <GridEvents OnActionBegin="ActionBeginHandler" TValue="CRMTuyenDocOutputDto"></GridEvents>
+                    <GridEvents OnActionBegin="ActionBeginHandler" OnDataBound="OnDataBound" TValue="CRMTuyenDocOutputDto"></GridEvents>
                     <GridColumns>
-                        <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Id)" IsPrimaryKey="true" Visible="false" HeaderText="#" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left" Width="100" AllowEditing="false"></GridColumn>
+                        <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Id)" IsPrimaryKey="true" Visible="false" HeaderText="#"   TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left" Width="100" AllowEditing="false"></GridColumn>
                         <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Name)" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left"></GridColumn>
                         <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Code)" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left"></GridColumn>
                         <GridColumn Field="@nameof(CRMTuyenDocOutputDto.CreationTime)" AllowEditing="false" HeaderText="Created date" EditType="EditType.DatePickerEdit" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Right" Format="dd/MM/yyyy"></GridColumn>
@@ -53,24 +53,27 @@
 
 
 @code {
-    //  public string[] Toolbar = new string[] {"Refresh", "Search" };
-   public List<ItemModel> ToolbarIT = new List<ItemModel>();
-    //Toolbaritems.Add(new Syncfusion.EJ2.Blazor.Navigations.ItemModel() { Text = "Refresh", Id = "refresh", TooltipText = "refresh", PrefixIcon = "MT_reload" });
-    //Toolbaritems.Add(new Syncfusion.EJ2.Blazor.Navigations.ItemModel() { Text = "Delete", Id = "delete", TooltipText = "Delete Record", PrefixIcon = "delete" });
+      //public string[] Toolbar = new string[] { "Search" };
+    public List<ItemModel> ToolbarIT = new List<ItemModel>();
+   
 
     public string[] columnMenu = new string[] { "ColumnChooser", "Filter" };
     EjsGrid<CRMTuyenDocOutputDto> Grid;
     public List<CRMTuyenDocOutputDto> ListTuyenDoc { get; set; }
     public static string Header { get; set; }
+    long idAdded = 0;
     public object DialogParams = new
     {
 @@params = new DialogModel { Header = Header }
-};
+    };
 
 protected override async Task OnInitializedAsync()
 {
+    ToolbarIT.Add(new Syncfusion.EJ2.Blazor.Navigations.ItemModel { Text = "Refresh", Id = "refresh", TooltipText = "refresh", PrefixIcon = "mdi mdi-refresh" });
+    ToolbarIT.Add(new Syncfusion.EJ2.Blazor.Navigations.ItemModel { Text = "Search", Id = "Search" });
     ListTuyenDoc = await mediatR.Send<List<CRMTuyenDocOutputDto>>(new GetAllCRMTuyenDocQuery());
 }
+
 
 public void AddNewRecord()
 {
@@ -78,7 +81,27 @@ public void AddNewRecord()
     this.Grid.AddRecord();
 }
 
-public async Task ActionBeginHandler(ActionEventArgs<CRMTuyenDocOutputDto> args)
+
+public void OnDataBound()
+{
+    if(idAdded>0)
+    {
+        SetId();
+
+    }
+}
+
+public void SetId()
+{
+    var dt = ListTuyenDoc.Where(x => x.Id == 0).FirstOrDefault();
+    if (dt != null)
+    {
+        dt.Id = idAdded;
+        idAdded = 0;
+    }
+   
+}
+public void ActionBeginHandler(ActionEventArgs<CRMTuyenDocOutputDto> args)
 {
     try
     {
@@ -94,23 +117,25 @@ public async Task ActionBeginHandler(ActionEventArgs<CRMTuyenDocOutputDto> args)
                     td.Id = args.Data.Id;
                     td.Name = args.Data.Name;
                     td.Code = args.Data.Code;
-                    await mediatR.Send(td);
+                    Task.Run<Unit>(async () => await mediatR.Send(td));
                 }
                 else
                 {
                     CreateCRMTuyenDocCommand td = new CreateCRMTuyenDocCommand();
                     td.Name = args.Data.Name;
                     td.Code = args.Data.Code;
-                    long id = await mediatR.Send<long>(td);
-                    args.Data.Id = id;
+                     
+                       idAdded= Task.Run<long>(async () =>await mediatR.Send<long>(td)).GetAwaiter().GetResult() ;
+
+                    SetId();
                 }
-                toastService.ShowSuccess("Cập nhật thành công", "Congratulations!");
+                toastService.ShowSuccess("Cập nhật thành công!");
                 break;
             case Syncfusion.EJ2.Blazor.Grids.Action.Delete:
                 DeleteCRMTuyenDocCommand tddl = new DeleteCRMTuyenDocCommand();
                 tddl.Id = args.Data.Id;
-                Unit a = await mediatR.Send<Unit>(tddl);
-                toastService.ShowSuccess("Xóa thành công!", "Congratulations!");
+                  Task.Run<Unit>(async () => await mediatR.Send(tddl));
+                toastService.ShowSuccess("Xóa thành công!");
                 break;
             case Syncfusion.EJ2.Blazor.Grids.Action.Cancel:
                 break;
@@ -124,8 +149,7 @@ public async Task ActionBeginHandler(ActionEventArgs<CRMTuyenDocOutputDto> args)
     catch (Exception ex)
     {
         args.Cancel = true;
-        toastService.ShowError(ex.Message, "Error!");
-
+        toastService.ShowError(ex.ToString());
     }
     // Here you can customize your code
 

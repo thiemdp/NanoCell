@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Syncfusion.EJ2.Blazor.Notifications
 @inject IToastService toastService
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
@@ -18,14 +19,37 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                
+
             </div>
         </div>
     </div>
 </div>
+<button class="e-btn e-control e-info" id="info_Toast" @onclick="@InfoBtnOnClick"> Info Message </button>
+<button class="e-btn e-control e-success" id="success_Toast" @onclick="@SuccessBtnOnClick"> Success Message </button>
+<button class="e-btn e-control e-warning" id="warning_Toast" @onclick="@WarnBtnOnClick"> Warning Message </button>
+<button class="e-btn e-control e-danger" id="error_Toast" @onclick="@ErrorBtnOnClick"> Danger Message </button>
+
 @*Welcome to your new app.*@
 @*<button class="btn btn-info" @onclick="@(() => toastService.ShowInfo("I'm an INFO message"))">Info Toast</button>
     <button class="btn btn-success" @onclick="@(() => toastService.ShowSuccess("I'm a SUCCESS message with a custom title", "Congratulations!"))">Success Toast</button>
     <button class="btn btn-warning" @onclick="@(() => toastService.ShowWarning("I'm a WARNING message"))">Warning Toast</button>
     <button class="btn btn-danger" @onclick="@(() => toastService.ShowError("I'm an ERROR message"))">Error Toast</button>*@
-
+@code{
+ 
+        private void InfoBtnOnClick() {
+        toastService.ShowInfo("Số ca tử vong vì virus corona tại Mỹ đã tăng lên 12 người tính đến ngày 5/3, trong khi ngày càng nhiều bang xuất hiện các ca nhiễm mới.");
+    }
+    private void WarnBtnOnClick() {
+        toastService.ShowWarning("Số ca tử vong vì virus corona tại Mỹ đã tăng lên 12 người tính đến ngày 5/3, trong khi ngày càng nhiều bang xuất hiện các ca nhiễm mới.");
+    }
+    private void SuccessBtnOnClick() {
+        toastService.ShowSuccess("Số ca tử vong vì virus corona tại Mỹ đã tăng lên 12 người tính đến ngày 5/3, trong khi ngày càng nhiều bang xuất hiện các ca nhiễm mới.");
+    }
+    private void ErrorBtnOnClick() {
+       toastService.ShowError("aaaaaa");
+    }
+    private void HideBtnOnClick()
+    {
+       
+    }
+}

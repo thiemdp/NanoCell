@@ -18,6 +18,7 @@ using NanoCell.WebUI.Areas.Identity;
 using NanoCell.Application;
 using NanoCell.Infrastructure;
 using NanoCell.Application.Common.Interfaces;
+using NanoCell.UI;
 using NanoCell.WebUI.Services;
 using Blazored.Toast;
 using Syncfusion.EJ2.Blazor;
@@ -47,8 +48,8 @@ namespace NanoCell.WebUI
             services.AddSyncfusionBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            services.AddBlazoredToast();
-
+            //services.AddBlazoredToast();
+            services.AddUI();
             //services.AddCors(options =>
             //{
             //    options.AddPolicy("AllowAllOrigins", builder =>
@@ -58,6 +59,7 @@ namespace NanoCell.WebUI
             //        .AllowAnyHeader();
             //    });
             //});
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

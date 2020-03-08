@@ -54,6 +54,11 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+
+            [MaxLength(255)]
+            public string Surname { get; set; }
+
+            public string AvatarURL { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -104,7 +109,9 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account
                 {
                     Input = new InputModel
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        Surname =info.Principal.FindFirstValue(ClaimTypes.Name),
+                        AvatarURL = info.Principal.FindFirstValue("image")
                     };
                 }
                 return Page();
@@ -124,7 +131,7 @@ namespace NanoCell.WebUI.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email,AvatarURL = Input.AvatarURL,Surname = Input.Surname };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
