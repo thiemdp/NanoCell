@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+//thiemdp
 namespace NanoCell.Application.CRMTuyenDoc.Queries
 {
     public class GetAllCRMTuyenDocQuery:IRequest<List<CRMTuyenDocOutputDto>>
