@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NanoCell.UI\NanoCell.UI.csproj" />
+    <ProjectReference Include="..\NanoCell.UI\NanoCell.UI.csproj" />
     <ProjectReference Include="..\Application\NanoCell.Application.csproj" />
     <ProjectReference Include="..\Infrastructure\NanoCell.Infrastructure.csproj" />
   </ItemGroup>
