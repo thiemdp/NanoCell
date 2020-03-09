@@ -30,7 +30,7 @@
                     <GridFilterSettings Type="Syncfusion.EJ2.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
                     <GridPageSettings PageSize="20"></GridPageSettings>
                     <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Dialog" Dialog="DialogParams" ShowDeleteConfirmDialog="true"></GridEditSettings>
-                    <GridEvents OnActionBegin="ActionBeginHandler" OnDataBound="OnDataBound" TValue="CRMTuyenDocOutputDto"></GridEvents>
+                    <GridEvents OnActionBegin="ActionBeginHandler" RowDataBound="OnRowDataBound" TValue="CRMTuyenDocOutputDto"></GridEvents>
                     <GridColumns>
                         <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Id)" IsPrimaryKey="true" Visible="false" HeaderText="#"   TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left" Width="100" AllowEditing="false"></GridColumn>
                         <GridColumn Field="@nameof(CRMTuyenDocOutputDto.Name)" TextAlign="Syncfusion.EJ2.Blazor.Grids.TextAlign.Left"></GridColumn>
@@ -82,9 +82,11 @@ public void AddNewRecord()
 }
 
 
-public void OnDataBound()
+ 
+
+public void OnRowDataBound()
 {
-    if(idAdded>0)
+     if(idAdded>0)
     {
         SetId();
 
@@ -99,8 +101,10 @@ public void SetId()
         dt.Id = idAdded;
         idAdded = 0;
     }
-   
+
 }
+
+ 
 public void ActionBeginHandler(ActionEventArgs<CRMTuyenDocOutputDto> args)
 {
     try
@@ -124,17 +128,14 @@ public void ActionBeginHandler(ActionEventArgs<CRMTuyenDocOutputDto> args)
                     CreateCRMTuyenDocCommand td = new CreateCRMTuyenDocCommand();
                     td.Name = args.Data.Name;
                     td.Code = args.Data.Code;
-                     
-                       idAdded= Task.Run<long>(async () =>await mediatR.Send<long>(td)).GetAwaiter().GetResult() ;
-
-                    SetId();
+                    idAdded= Task.Run<long>(async () =>await mediatR.Send<long>(td)).GetAwaiter().GetResult() ;
                 }
                 toastService.ShowSuccess("Cập nhật thành công!");
                 break;
             case Syncfusion.EJ2.Blazor.Grids.Action.Delete:
                 DeleteCRMTuyenDocCommand tddl = new DeleteCRMTuyenDocCommand();
                 tddl.Id = args.Data.Id;
-                  Task.Run<Unit>(async () => await mediatR.Send(tddl));
+                Task.Run<Unit>(async () => await mediatR.Send(tddl));
                 toastService.ShowSuccess("Xóa thành công!");
                 break;
             case Syncfusion.EJ2.Blazor.Grids.Action.Cancel:
